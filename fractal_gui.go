@@ -18,17 +18,6 @@ var iterationGap = 1000
 var lightColor = uint32(0xFFFFFF)
 var darkColor = uint32(0x000000)
 
-func newColor(colorA, colorB uint32, hue float64) (uint8, uint8, uint8) {
-	var ra = uint8(colorA & (0xFF << 16) >> 16)
-	var ga = uint8(colorA & (0xFF << 8) >> 8)
-	var ba = uint8(colorA & 0xFF)
-	var rb = uint8(colorB & (0xFF << 16) >> 16)
-	var gb = uint8(colorB & (0xFF << 8) >> 8)
-	var bb = uint8(colorB & 0xFF)
-
-	return uint8(float64(rb-ra)*hue) + ra, uint8(float64(gb-ga)*hue) + ga, uint8(float64(bb-ba)*hue) + ba
-}
-
 func drawMandelbrot(renderer *sdl.Renderer, m *fractal_core.Mandelbrot) {
 	renderer.Clear()
 
@@ -40,7 +29,7 @@ func drawMandelbrot(renderer *sdl.Renderer, m *fractal_core.Mandelbrot) {
 			var hue = fractal_core.GetHue(m)[x][y]
 
 			if val < uint32(iterations) {
-				var r, g, b = newColor(darkColor, lightColor, hue)
+				var r, g, b = fractal_core.InterpColors(darkColor, lightColor, hue)
 				renderer.SetDrawColor(r, g, b, 0x00)
 			}
 
